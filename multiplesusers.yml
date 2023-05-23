@@ -1,0 +1,13 @@
+---
+- name : playbook to create multiple users
+  hosts: all
+  become: true
+  tasks:
+  - name : create users
+    user:
+     name: '{{item}}'
+     state: present
+    loop:
+      - usr4
+      - usr5
+      - usr6

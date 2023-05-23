@@ -1,0 +1,6 @@
+---
+- name: playbook to create a httpd/apache
+  hosts: webservers
+  become: true
+  roles: 
+   - setup-apache-roles

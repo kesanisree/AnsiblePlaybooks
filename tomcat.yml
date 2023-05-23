@@ -1,0 +1,37 @@
+---
+- name: playbook to install tomcat
+  hosts: webservers
+  become: true
+  tasks:
+  - name: installing java on RedHat
+    yum:
+     name: java
+     state: installed
+    when: ansible_os_family== "RedHat"
+
+  - name: installing java on Debian
+    apt:
+     name: default-jdk
+     state: present
+    when: ansible_os_family== "Debian"
+
+  - name: download tomcat
+    get_url:
+     url: https://dlcdn.apache.org/tomcat/tomcat-8/v8.5.89/bin/apache-tomcat-8.5.89.tar.gz
+     dest: /opt
+
+  - name: extract tar file
+    unarchive:
+     src: /opt/apache-tomcat-8.5.89.tar.gz
+     dest: /opt
+     remote_src: yes
+
+  - name: change permission to startup.sh file
+    file:  
+      path: /opt/apache-tomcat-8.5.89/bin/startup.sh
+      mode: 0777
+
+  - name: starting startup.sh file
+    shell: nohup ./startup.sh
+    args:
+     chdir: /opt/apache-tomcat-8.5.89/bin
